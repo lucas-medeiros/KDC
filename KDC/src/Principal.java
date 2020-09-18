@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+
 /*
  * @author 	Lucas Cardoso de Medeiros
  * @since 	18/09/2020
@@ -33,42 +34,42 @@ public class Principal {
 			
 			//Bob manda msg para KDC, pedindo para conversar com Alice	
 			System.out.println(Bob.getNome() + " envia mensagem para o KDC, pedindo para falar com " + Alice.getNome());
-			kdc.gerarChaveSessao(Bob.getNome(), //P1: identificaÁ„o de Bob
-								AES.cifra(Bob.getNome(), Bob.getChave()), //P2: identificaÁ„o de Bob cifrado em k_bob
-								AES.cifra(Alice.getNome(), Bob.getChave())); //P3: identificaÁ„o de Alice cifrado em k_bob
+			kdc.gerarChaveSessao(Bob.getNome(), //P1: identifica√ß√£o de Bob
+								AES.cifra(Bob.getNome(), Bob.getChave()), //P2: identifica√ß√£o de Bob cifrado em k_bob
+								AES.cifra(Alice.getNome(), Bob.getChave())); //P3: identifica√ß√£o de Alice cifrado em k_bob
 			
-			//Bob salva a chave de sess„o
+			//Bob salva a chave de sess√£o
 			Bob.setChaveSessao( AES.decifra(kdc.getKs_Bob(), Bob.getChave()) );
 			
-			//Alice salva a chave de sess„o
+			//Alice salva a chave de sess√£o
 			Alice.setChaveSessao( AES.decifra(kdc.getKs_Alice(), Alice.getChave()) );
-			System.out.println(Bob.getNome() + " e " + Alice.getNome() + " est„o com a chave de sess„o: " + Bob.getChaveSessao());
+			System.out.println(Bob.getNome() + " e " + Alice.getNome() + " est√£o com a chave de sess√£o: " + Bob.getChaveSessao());
 			
 			//Alice cria um nonce
 			Alice.criaNonce();
 			
-			//Alice cifra nounce na chave de sess„o e manda para Bob
+			//Alice cifra nounce na chave de sess√£o e manda para Bob
 			byte[] nonceCript = AES.cifra("" + Alice.getNonce(), Alice.getChaveSessao());
-			System.out.println(Alice.getNome() + " gera um nounce, cifra na chave de sess„o e envia para " + Bob.getNome());
+			System.out.println(Alice.getNome() + " gera um nounce, cifra na chave de sess√£o e envia para " + Bob.getNome());
 			
-			//Bob decifra nounce com a chave de sess„o
+			//Bob decifra nounce com a chave de sess√£o
 			Bob.setNonce( Integer.parseInt( AES.decifra( nonceCript, Bob.getChaveSessao() ) ) );
-			System.out.println(Bob.getNome() + " decifra o nounce com a chave de sess„o");
+			System.out.println(Bob.getNome() + " decifra o nounce com a chave de sess√£o");
 			
-			//Bob aplica o nonce na funÁ„o de autenticaÁ„o e manda para Alice, cifrado na chave de sess„o
+			//Bob aplica o nonce na fun√ß√£o de autentica√ß√£o e manda para Alice, cifrado na chave de sess√£o
 			Bob.setNewNonce( Bob.funcAutentic( Bob.getNonce() ) );
 			byte[] newNonceCript = AES.cifra("" + Bob.getNewNonce(), Bob.getChaveSessao());
-			System.out.println(Bob.getNome() + " aplica o nonce na funÁ„o de autenticaÁ„o e manda para " + Alice.getNome() +", cifrado na chave de sess„o");
+			System.out.println(Bob.getNome() + " aplica o nonce na fun√ß√£o de autentica√ß√£o e manda para " + Alice.getNome() +", cifrado na chave de sess√£o");
 			
-			//Alice decifra novo nouce recebido + aplica nonce original na sua funÁ„o de autenticaÁ„o -> e compara os dois
+			//Alice decifra novo nouce recebido + aplica nonce original na sua fun√ß√£o de autentica√ß√£o -> e compara os dois
 			Alice.setNewNonce( Integer.parseInt( AES.decifra( newNonceCript, Alice.getChaveSessao() ) ) );
-			System.out.println(Alice.getNome() + " decifra o novo nonce recebido, aplica o nonce original na funÁ„o de autenticaÁ„o e compara os dois valores");
+			System.out.println(Alice.getNome() + " decifra o novo nonce recebido, aplica o nonce original na fun√ß√£o de autentica√ß√£o e compara os dois valores");
 			if(Alice.getNewNonce() == Alice.funcAutentic(Alice.getNonce())) {
-				System.out.println("Mensagem recebida È do " + Bob.getNome());
+				System.out.println("Mensagem recebida √© do " + Bob.getNome());
 				System.out.println("Agora " + Bob.getNome() + " e " + Alice.getNome() + " podem trocar mensagens seguras entre si\n");
-				//Processo de autenticaÁ„o para comunicaÁ„o condidencial acaba aqui
+				//Processo de autentica√ß√£o para comunica√ß√£o condidencial acaba aqui
 				
-				//SimulaÁ„o da troca de mensagens
+				//Simula√ß√£o da troca de mensagens
 				Scanner keyboard = new Scanner(System.in);
 				String msg = "", msgEnd = "fim";
 				int cont = 0;
@@ -83,7 +84,7 @@ public class Principal {
 					cont++;
 				}
 			} else {
-				System.out.println("Mensagem recebida n„o È do " + Bob.getNome() + "\nEncerrando o sistema");
+				System.out.println("Mensagem recebida n√£o √© do " + Bob.getNome() + "\nEncerrando o sistema");
 				System.exit(0);
 			}
 		}
