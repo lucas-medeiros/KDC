@@ -1,5 +1,13 @@
 import java.util.Random;
 
+
+/*
+ * @author 	Lucas Cardoso de Medeiros
+ * @since 	18/09/2020
+ * @version 1.0.0
+ */
+
+
 public class Pessoa {
 	
 	private String nome;

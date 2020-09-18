@@ -1,6 +1,15 @@
+import java.util.Scanner;
+
+/*
+ * @author 	Lucas Cardoso de Medeiros
+ * @since 	18/09/2020
+ * @version 1.0.0
+ */
+
 
 public class Principal {
 
+	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 
 		try {	
@@ -49,13 +58,30 @@ public class Principal {
 			//Bob aplica o nonce na função de autenticação e manda para Alice, cifrado na chave de sessão
 			Bob.setNewNonce( Bob.funcAutentic( Bob.getNonce() ) );
 			byte[] newNonceCript = AES.cifra("" + Bob.getNewNonce(), Bob.getChaveSessao());
-			System.out.println(Bob.getNome() + "aplica o nonce na função de autenticação e manda para " + Alice.getNome() +", cifrado na chave de sessão");
+			System.out.println(Bob.getNome() + " aplica o nonce na função de autenticação e manda para " + Alice.getNome() +", cifrado na chave de sessão");
 			
 			//Alice decifra novo nouce recebido + aplica nonce original na sua função de autenticação -> e compara os dois
 			Alice.setNewNonce( Integer.parseInt( AES.decifra( newNonceCript, Alice.getChaveSessao() ) ) );
+			System.out.println(Alice.getNome() + " decifra o novo nonce recebido, aplica o nonce original na função de autenticação e compara os dois valores");
 			if(Alice.getNewNonce() == Alice.funcAutentic(Alice.getNonce())) {
 				System.out.println("Mensagem recebida é do " + Bob.getNome());
-				System.out.println("Agora " + Bob.getNome() + " e " + Alice.getNome() + " podem trocar mensagens seguras entre si");
+				System.out.println("Agora " + Bob.getNome() + " e " + Alice.getNome() + " podem trocar mensagens seguras entre si\n");
+				//Processo de autenticação para comunicação condidencial acaba aqui
+				
+				//Simulação da troca de mensagens
+				Scanner keyboard = new Scanner(System.in);
+				String msg = "", msgEnd = "fim";
+				int cont = 0;
+				System.out.println("\tEnvie \"" + msgEnd + "\" para encerrar a troca de mensagens" );
+				while(!(msg.equals(msgEnd))) {
+					if((cont % 2) == 0) {
+						System.out.print(Bob.getNome() + ": ");
+					} else {
+						System.out.print(Alice.getNome() + ": ");
+					}
+					msg = keyboard.nextLine();
+					cont++;
+				}
 			} else {
 				System.out.println("Mensagem recebida não é do " + Bob.getNome() + "\nEncerrando o sistema");
 				System.exit(0);
