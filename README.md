@@ -1,2 +1,2 @@
 # KDC
-Key Distribution Center (KDC) model in Java
+Key Distribution Center (KDC) Java model
